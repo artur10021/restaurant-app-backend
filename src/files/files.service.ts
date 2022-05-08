@@ -16,7 +16,6 @@ export class FilesService {
             if(!fs.existsSync(filePath)){ // если по этому пути ничего не существует то создадим такую папку
                 fs.mkdirSync(filePath, {recursive: true});
             }
-
             fs.writeFileSync(path.join(filePath, fileName), file.buffer);
             return fileName;
         }

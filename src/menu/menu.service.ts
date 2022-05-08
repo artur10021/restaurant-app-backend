@@ -21,6 +21,20 @@ export class MenuService {
         return burgers;
     }
 
+    async deleteBurgerById(id:number){
+        try {
+            const burger = await this.burgerRepository.findOne({where: {id}});
+            const isDeleted = await this.burgerRepository.destroy({where: {id}});
+            if(isDeleted){
+                return burger;
+            }
+        }
+        catch (e){
+            console.log(e)
+        }
+
+    }
+
     async getBurgerByName(name: string){
         const burger = await this.burgerRepository.findOne({where:{name}})
         return burger;

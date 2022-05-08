@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
 import {MenuService} from "./menu.service";
 import {CreateBurgerDto} from "./dto/create-burger-dto";
 import {FileInterceptor} from "@nestjs/platform-express";
@@ -23,7 +23,6 @@ export class MenuController {
     @UseInterceptors(FileInterceptor('image'))
     addToMenu(@Body() burgerDto: CreateBurgerDto,
               @UploadedFile() image:Express.Multer.File){
-        console.log("-----------------",image)
         return this.menuService.createBurger(burgerDto, image);
     }
 
@@ -43,5 +42,14 @@ export class MenuController {
     @Get(":name")
     getBurgerByNameFromMenu(@Param("name") name: string){
         return this.menuService.getBurgerByName(name);
+    }
+
+    @ApiOperation({summary: 'remove burger by id from menu'})
+    @ApiResponse({status:200, type: [Burger]})
+    @Roles('ADMIN')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Delete('deleteItemById/:id')
+    deleteBurger(@Param("id") id: number){
+        return this.menuService.deleteBurgerById(id);
     }
 }
